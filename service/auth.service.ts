@@ -2,6 +2,7 @@ import {ILoginUser, IRegisterUser} from "../model/User.model";
 import prismaClient from "../config/prismaConfig";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import {KnownError} from "../model/KnownError.model";
 
 export const loginUser = async (loginUser: ILoginUser) => {
     try {
@@ -11,7 +12,7 @@ export const loginUser = async (loginUser: ILoginUser) => {
             }
         });
         if (!user || !user.password || !bcrypt.compareSync(loginUser.password, user.password)) {
-            return new Error("Invalid credentials");
+            return new KnownError("Invalid credentials");
         }
         const jwtUser = {
             id: user.id,
@@ -39,7 +40,7 @@ export const registerUser = async (user: IRegisterUser) => {
                 data: user
             });
         } else {
-            return new Error("User already exist");
+            return new KnownError("User already exist");
         }
     } catch (e: any) {
         return new Error(e.message);
