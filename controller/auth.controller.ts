@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {getAuthenticatedUser, loginUser, registerUser, verifyUserToken} from "../service/auth.service";
+import {getAuthenticatedUserFromMongo, loginUser, registerUser, verifyUserToken} from "../service/auth.service";
 import {KnownError} from "../model/KnownError.model";
 
 export const login = async (req: Request, res: Response) => {
@@ -46,7 +46,7 @@ export const isLoggedIn = async (req: Request, res: Response) => {
 };
 
 export const getLoggedInUser = async (req: Request, res: Response) => {
-    const user = await getAuthenticatedUser(req.headers.authorization as string);
+    const user = await getAuthenticatedUserFromMongo(req.headers.authorization as string);
     if (user instanceof Error) {
         res.status(400).json({message: user.message});
     }

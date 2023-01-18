@@ -1,7 +1,7 @@
-import {ILoginUser, IRegisterUser} from "../model/User.model";
+import {ILoginUser, IRegisterUser, IUser} from "../model/User.model";
 import prismaClient from "../config/prismaConfig";
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import jwt, {JwtPayload} from 'jsonwebtoken';
 import {KnownError} from "../model/KnownError.model";
 
 export const loginUser = async (loginUser: ILoginUser) => {
@@ -55,7 +55,7 @@ export const verifyUserToken = (token: string) => {
     }
 };
 
-export const getAuthenticatedUser = async (token: string) => {
+export const getAuthenticatedUserFromMongo = async (token: string) => {
     try {
         const jwtUser = jwt.verify(token, process.env.JWT_SECRET as string);
         const user = await prismaClient.user.findUnique({
@@ -65,6 +65,14 @@ export const getAuthenticatedUser = async (token: string) => {
         });
         delete (user as any).password;
         return user;
+    } catch (e: any) {
+        return new Error(e.message);
+    }
+};
+
+export const getAuthenticatedUserFromToken = (token: string): string | JwtPayload => {
+    try {
+        return jwt.verify(token, process.env.JWT_SECRET as string);
     } catch (e: any) {
         return new Error(e.message);
     }

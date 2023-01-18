@@ -9,6 +9,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use('/', require('./routes/auth.route'));
+app.use('/expenses', require('./routes/expense.route'));
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
