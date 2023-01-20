@@ -1,6 +1,6 @@
 export class KnownError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = 'KnownError';
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = "KnownError";
+  }
 }
