@@ -8,9 +8,11 @@ export const createExpense = async (expense: IExpense, user: IUser) => {
     return await prismaClient.expense.create({
       data: {
         amount: Number(expense.amount),
-        categoryId: expense.categoryId,
+        tagId: expense.tagId,
         userId: user.id,
         description: expense?.description ?? undefined,
+        date: dayjs(expense.date).toDate(),
+        category: expense.category,
       },
     });
   } catch (e: any) {
@@ -45,10 +47,12 @@ export const getExpenses = async (user?: IUser) => {
         amount: true,
         description: false,
         date: true,
-        category: {
+        category: true,
+        tag: {
           select: {
             name: true,
             id: true,
+            color: true,
           },
         },
       },
@@ -66,7 +70,7 @@ export const updateExpense = async (id: string, expense: IExpense) => {
       },
       data: {
         amount: Number(expense.amount),
-        categoryId: expense.categoryId,
+        tagId: expense.tagId,
         description: expense?.description ?? undefined,
         date: dayjs(expense.date).toDate(),
       },

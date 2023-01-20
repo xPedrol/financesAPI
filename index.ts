@@ -10,7 +10,8 @@ app.use(bodyParser.json());
 app.use(express.static("public"));
 app.use("/", require("./routes/auth.route"));
 app.use("/expenses", require("./routes/expense.route"));
-app.use("/categories", require("./routes/category.route"));
+app.use("/expensesStatistic", require("./routes/expensesStatistic.route"));
+app.use("/tags", require("./routes/tag.route"));
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

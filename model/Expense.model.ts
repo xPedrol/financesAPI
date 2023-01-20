@@ -1,12 +1,14 @@
 import { Dayjs } from "dayjs";
-import { ICategory } from "./Category.model";
+import { ITag } from "./Tag.model";
+import { EnumCategory } from "../enum/Category.enum";
 
 export interface IExpense {
   id: string;
   amount: number;
-  category: ICategory;
-  categoryId: string;
+  tag: ITag;
+  tagId: string;
   createdAt: Dayjs;
   description?: string;
   date: Dayjs;
+  category: EnumCategory;
 }

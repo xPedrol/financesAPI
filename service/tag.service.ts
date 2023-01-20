@@ -1,11 +1,11 @@
 import { IExpense } from "../model/Expense.model";
 import { IUser } from "../model/User.model";
 import prismaClient from "../config/prismaConfig";
-import { ICategory } from "../model/Category.model";
+import { ITag } from "../model/Tag.model";
 
-export const createCategory = async (expense: ICategory, user: IUser) => {
+export const createTag = async (expense: ITag, user: IUser) => {
   try {
-    return await prismaClient.category.create({
+    return await prismaClient.tag.create({
       data: {
         color: expense.color,
         description: expense.description,
@@ -18,9 +18,9 @@ export const createCategory = async (expense: ICategory, user: IUser) => {
   }
 };
 
-export const getCategory = async (id: string) => {
+export const getTag = async (id: string) => {
   try {
-    return await prismaClient.category.findUnique({
+    return await prismaClient.tag.findUnique({
       where: {
         id,
       },
@@ -30,7 +30,7 @@ export const getCategory = async (id: string) => {
   }
 };
 
-export const getCategories = async (user?: IUser) => {
+export const getTags = async (user?: IUser) => {
   let where: any = {};
   if (user) {
     where = {
@@ -38,7 +38,7 @@ export const getCategories = async (user?: IUser) => {
     };
   }
   try {
-    return await prismaClient.category.findMany({
+    return await prismaClient.tag.findMany({
       where,
     });
   } catch (e: any) {
@@ -46,16 +46,16 @@ export const getCategories = async (user?: IUser) => {
   }
 };
 
-export const updateCategory = async (id: string, category: ICategory) => {
+export const updateTag = async (id: string, tag: ITag) => {
   try {
-    return await prismaClient.category.update({
+    return await prismaClient.tag.update({
       where: {
         id,
       },
       data: {
-        color: category.color,
-        description: category.description,
-        name: category.name,
+        color: tag.color,
+        description: tag.description,
+        name: tag.name,
       },
     });
   } catch (e: any) {
@@ -63,9 +63,9 @@ export const updateCategory = async (id: string, category: ICategory) => {
   }
 };
 
-export const deleteCategory = async (id: string) => {
+export const deleteTag = async (id: string) => {
   try {
-    return await prismaClient.category.delete({
+    return await prismaClient.tag.delete({
       where: {
         id,
       },
