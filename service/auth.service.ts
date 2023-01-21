@@ -24,7 +24,7 @@ export const loginUser = async (loginUser: ILoginUser) => {
       name: user.name,
     };
     const token = jwt.sign(jwtUser, process.env.JWT_SECRET as string, {
-      expiresIn: "1h",
+      expiresIn: "1d",
     });
     return { token, user };
   } catch (e: any) {
