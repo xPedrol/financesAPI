@@ -5,7 +5,7 @@ import {
   controllerGetNotes,
   controllerUpdateNote,
   controllerDeleteNote,
-  controllerUpdateNoteFavorite,
+  controllerUpdateNoteFixed,
   controllerCountNotes,
 } from "../controller/note.controller";
 import { verifyToken } from "../middleware/auth.middleware";
@@ -17,6 +17,6 @@ router.get("/:id", verifyToken, controllerGetNote);
 router.get("/", verifyToken, controllerGetNotes);
 router.put("/:id", verifyToken, controllerUpdateNote);
 router.delete("/:id", verifyToken, controllerDeleteNote);
-router.put("/:id/favorite", verifyToken, controllerUpdateNoteFavorite);
+router.put("/:id/fixed", verifyToken, controllerUpdateNoteFixed);
 
 module.exports = router;

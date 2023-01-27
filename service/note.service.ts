@@ -12,8 +12,8 @@ export const createNote = async (note: INote, user: IUser) => {
         createdAt: dayjs(note.createdAt).toDate(),
         date: dayjs(note.date).toDate(),
         color: note.color,
-        favorite: note.favorite,
         userId: user.id,
+        fixed: note.fixed,
       },
     });
   } catch (e: any) {
@@ -47,9 +47,9 @@ export const getNotes = async (user?: IUser) => {
         id: true,
         title: true,
         date: true,
-        favorite: true,
         description: true,
         color: true,
+        fixed: true,
       },
     });
   } catch (e: any) {
@@ -68,7 +68,7 @@ export const updateNote = async (id: string, note: INote) => {
         description: note.description,
         date: dayjs(note.date).toDate(),
         color: note.color,
-        favorite: note.favorite,
+        fixed: note.fixed,
       },
     });
   } catch (e: any) {
@@ -88,7 +88,7 @@ export const deleteNote = async (id: string) => {
   }
 };
 
-export const updateNoteFavorite = async (id: string) => {
+export const updateNoteFixed = async (id: string) => {
   try {
     const note = await getNote(id);
     if (!(note instanceof Error) && note) {
@@ -97,7 +97,7 @@ export const updateNoteFavorite = async (id: string) => {
           id,
         },
         data: {
-          favorite: !note.favorite,
+          fixed: !note.fixed,
         },
       });
     }

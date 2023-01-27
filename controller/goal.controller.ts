@@ -70,6 +70,6 @@ export const controllerGetGoalByDate = async (req: Request, res: Response) => {
     if (goals && goals.length !== 0) {
       res.status(200).json(goals[0]);
     }
-    res.status(200).json(goals);
+    res.status(200).json(null);
   }
 };

@@ -8,7 +8,7 @@ import {
   getNote,
   getNotes,
   updateNote,
-  updateNoteFavorite,
+  updateNoteFixed,
 } from "../service/note.service";
 
 export const controllerCreateNote = async (req: Request, res: Response) => {
@@ -51,11 +51,11 @@ export const controllerUpdateNote = async (req: Request, res: Response) => {
   res.status(200).json(updatedNote);
 };
 
-export const controllerUpdateNoteFavorite = async (
+export const controllerUpdateNoteFixed = async (
   req: Request,
   res: Response
 ) => {
-  const updatedNote = await updateNoteFavorite(req.params.id);
+  const updatedNote = await updateNoteFixed(req.params.id);
   if (updatedNote instanceof Error) {
     res.status(500).json(updatedNote.message);
   }
