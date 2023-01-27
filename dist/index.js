@@ -13,6 +13,7 @@ app.use("/expenses", require("./routes/expense.route"));
 app.use("/notes", require("./routes/note.route"));
 app.use("/expensesStatistic", require("./routes/expensesStatistic.route"));
 app.use("/tags", require("./routes/tag.route"));
+app.use("/goals", require("./routes/goal.route"));
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
 });
