@@ -10,5 +10,5 @@ export interface IExpense {
   createdAt: Dayjs;
   description?: string;
   date: Dayjs;
-  category: EnumCategory;
+  category?: EnumCategory;
 }

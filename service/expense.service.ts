@@ -12,7 +12,6 @@ export const createExpense = async (expense: IExpense, user: IUser) => {
         userId: user.id,
         description: expense?.description ?? undefined,
         date: dayjs(expense.date).toDate(),
-        category: expense.category,
       },
     });
   } catch (e: any) {
@@ -47,7 +46,6 @@ export const getExpenses = async (user?: IUser) => {
         amount: true,
         description: false,
         date: true,
-        category: true,
         tag: {
           select: {
             name: true,

@@ -1,14 +1,16 @@
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
 }
 
 model User {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  id        String    @id @default(uuid()) @map("_id")
   email     String    @unique
   name      String?
   password  String?
@@ -16,45 +18,57 @@ model User {
   Tag       Tag[]
   createdAt DateTime? @default(now())
   Note      Note[]
+  Goal      Goal[]
 }
 
 model Tag {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  id          String    @id @default(uuid()) @map("_id")
   name        String
   color       String
-  description String
+  description String    @db.Text
   Expense     Expense[]
   createdAt   DateTime? @default(now())
   user        User      @relation(fields: [userId], references: [id])
-  userId      String    @db.ObjectId
+  userId      String
+
+  @@index([userId])
 }
 
 model Expense {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  id          String    @id @default(uuid()) @map("_id")
   amount      Float
   date        DateTime?
   tag         Tag       @relation(fields: [tagId], references: [id])
-  tagId       String    @db.ObjectId
+  tagId       String
   createdAt   DateTime  @default(now())
   user        User      @relation(fields: [userId], references: [id])
-  userId      String    @db.ObjectId
-  description String?
-  category    Category
-}
+  userId      String
+  description String?   @db.Text
 
-enum Category {
-  GAIN
-  LOSS
+  @@index([userId, tagId])
 }
 
 model Note {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  id          String    @id @default(uuid()) @map("_id")
   title       String
-  description String
+  description String    @db.Text
   createdAt   DateTime? @default(now())
   user        User      @relation(fields: [userId], references: [id])
-  userId      String    @db.ObjectId
+  userId      String
   date        DateTime?
   color       String?
   favorite    Boolean?
+
+  @@index([userId])
+}
+
+model Goal {
+  id        String    @id @default(uuid()) @map("_id")
+  amount    Float
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String
+  date      DateTime
+  createdAt DateTime? @default(now())
+
+  @@index([userId])
 }
