@@ -1,12 +1,18 @@
 import prismaClient from "../config/prismaConfig";
-import { EnumCategory } from "../enum/Category.enum";
 import { IUser } from "../model/User.model";
 import { IGoal } from "../model/Goal.model";
+import dayjs from "dayjs";
+import { IExpensesByMonth } from "../model/ExpensesByMonth.model";
+import { formatDate } from "../utils/formatDate.utils";
 
-export const getExpenseStatistic = async (user: IUser) => {
+export const getExpenseStatistic = async (user: IUser, date: string) => {
   try {
     const expenseGainSum = await prismaClient.expense.aggregate({
       where: {
+        date: {
+          gte: dayjs(date).startOf("month").toDate(),
+          lte: dayjs(date).endOf("month").toDate(),
+        },
         userId: user.id,
         amount: {
           gt: 0,
@@ -18,6 +24,10 @@ export const getExpenseStatistic = async (user: IUser) => {
     });
     const expenseLossSum = await prismaClient.expense.aggregate({
       where: {
+        date: {
+          gte: dayjs(date).startOf("month").toDate(),
+          lte: dayjs(date).endOf("month").toDate(),
+        },
         userId: user.id,
         amount: {
           lt: 0,
@@ -39,12 +49,36 @@ export const getExpenseStatistic = async (user: IUser) => {
 
 export const getExpensesByMonth = async (
   user: IUser
-): Promise<IGoal[] | Error> => {
+): Promise<IExpensesByMonth[] | Error> => {
   try {
-    return await prismaClient.$queryRaw<
-      IGoal[]
+    const expensesByMonth = await prismaClient.$queryRaw<
+      IExpensesByMonth[]
     >`SELECT DATE_FORMAT(date,'%m/%Y') as date,SUM(amount) as amount FROM Expense
        WHERE userId = ${user.id} GROUP BY DATE_FORMAT(date,'%m/%Y')  ORDER BY date DESC`;
+    if (Array.isArray(expensesByMonth)) {
+      for (let i = 0; i < expensesByMonth.length; i++) {
+        const expenseByMonth = expensesByMonth[i];
+        if (expenseByMonth) {
+          let gainsAndLosses = await getExpenseStatistic(
+            user,
+            formatDate(expenseByMonth.date)
+          );
+          console.log("gainsAndLosses", gainsAndLosses);
+          if (gainsAndLosses instanceof Error || !gainsAndLosses) {
+            gainsAndLosses = {
+              gains: 0,
+              losses: 0,
+            };
+          } else {
+            gainsAndLosses.gains = gainsAndLosses.gains || 0;
+            gainsAndLosses.losses = gainsAndLosses.losses || 0;
+          }
+          expenseByMonth.gains = gainsAndLosses.gains as number;
+          expenseByMonth.losses = gainsAndLosses.losses as number;
+        }
+      }
+    }
+    return expensesByMonth;
   } catch (e: any) {
     return new Error(e.message);
   }

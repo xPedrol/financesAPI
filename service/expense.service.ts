@@ -31,13 +31,15 @@ export const getExpense = async (id: string) => {
   }
 };
 
-export const getExpenses = async (user?: IUser) => {
+export const getExpenses = async (user: IUser, date: string) => {
   let where: any = {};
-  if (user) {
-    where = {
-      userId: user.id,
-    };
-  }
+  where = {
+    userId: user.id,
+    date: {
+      gte: dayjs(date).startOf("month").toDate(),
+      lte: dayjs(date).endOf("month").toDate(),
+    },
+  };
   try {
     return await prismaClient.expense.findMany({
       where,

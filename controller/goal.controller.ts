@@ -59,7 +59,6 @@ export const controllerDeleteGoal = async (req: Request, res: Response) => {
 };
 
 export const controllerGetGoalByDate = async (req: Request, res: Response) => {
-  console.log("req.query.date", req.query.date);
   const user = getAuthenticatedUserFromToken(
     req.headers.authorization as string
   );

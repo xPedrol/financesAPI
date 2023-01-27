@@ -5,6 +5,7 @@ import {
   getExpenseStatistic,
 } from "../service/expenseStatistc.service";
 import { IUser } from "../model/User.model";
+import dayjs from "dayjs";
 
 export const controllerGetExpenseStatistic = async (
   req: Request,
@@ -13,7 +14,13 @@ export const controllerGetExpenseStatistic = async (
   const user = getAuthenticatedUserFromToken(
     req.headers.authorization as string
   );
-  const createdExpense = await getExpenseStatistic(user as any);
+  if (req.query.date === undefined) {
+    req.query.date = `${dayjs().month() + 1}-01-${dayjs().year()}`;
+  }
+  const createdExpense = await getExpenseStatistic(
+    user as any,
+    req.query.date as string
+  );
   if (createdExpense instanceof Error) {
     res.status(400).json({ message: createdExpense.message });
   }
