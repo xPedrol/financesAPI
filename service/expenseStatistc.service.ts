@@ -63,6 +63,7 @@ export const getExpensesByMonth = async (
             user,
             formatDate(expenseByMonth.date)
           );
+
           console.log("gainsAndLosses", gainsAndLosses);
           if (gainsAndLosses instanceof Error || !gainsAndLosses) {
             gainsAndLosses = {
