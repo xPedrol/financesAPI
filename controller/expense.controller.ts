@@ -37,7 +37,11 @@ export const controllerGetExpenses = async (req: Request, res: Response) => {
   if (req.query.date === undefined) {
     req.query.date = `${dayjs().month() + 1}-01-${dayjs().year()}`;
   }
-  const expenses = await getExpenses(user as IUser, req.query.date as string);
+  const expenses = await getExpenses(
+    user as IUser,
+    req.query.date as string,
+    req.query.page as string
+  );
   if (expenses instanceof Error) {
     res.status(500).json(expenses.message);
   }

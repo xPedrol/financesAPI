@@ -2,6 +2,7 @@ import prismaClient from "../config/prismaConfig";
 import { IExpense } from "../model/Expense.model";
 import { IUser } from "../model/User.model";
 import dayjs from "dayjs";
+import { paginate } from "./paginate.utils";
 
 export const createExpense = async (expense: IExpense, user: IUser) => {
   try {
@@ -31,7 +32,7 @@ export const getExpense = async (id: string) => {
   }
 };
 
-export const getExpenses = async (user: IUser, date: string) => {
+export const getExpenses = async (user: IUser, date: string, page: string) => {
   let where: any = {};
   where = {
     userId: user.id,
@@ -43,6 +44,7 @@ export const getExpenses = async (user: IUser, date: string) => {
   try {
     return await prismaClient.expense.findMany({
       where,
+      ...paginate(page),
       select: {
         id: true,
         amount: true,

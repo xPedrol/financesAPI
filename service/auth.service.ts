@@ -32,6 +32,32 @@ export const loginUser = async (loginUser: ILoginUser) => {
   }
 };
 
+export const updateUser = async (id: string, user: IUser) => {
+  try {
+    const userExist = await prismaClient.user.findFirst({
+      where: {
+        id,
+      },
+    });
+    if (userExist) {
+      return await prismaClient.user.update({
+        where: {
+          id,
+        },
+        data: {
+          name: user.name,
+          email: user.email,
+          picture: user?.picture,
+        },
+      });
+    } else {
+      return new KnownError("User does not exist");
+    }
+  } catch (e: any) {
+    return new Error(e.message);
+  }
+};
+
 export const registerUser = async (user: IRegisterUser) => {
   try {
     const userExist = await prismaClient.user.findFirst({

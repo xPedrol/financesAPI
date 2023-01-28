@@ -1,11 +1,14 @@
 import { Request, Response } from "express";
 import {
   getAuthenticatedUserFromMongo,
+  getAuthenticatedUserFromToken,
   loginUser,
   registerUser,
+  updateUser,
   verifyUserToken,
 } from "../service/auth.service";
 import { KnownError } from "../model/KnownError.model";
+import { IUser } from "../model/User.model";
 
 export const login = async (req: Request, res: Response) => {
   const user = req.body;
@@ -25,6 +28,25 @@ export const login = async (req: Request, res: Response) => {
       res.status(400).json({ message: "Invalid credentials", showError: true });
     }
   }
+};
+
+export const controllerUpdateUser = async (req: Request, res: Response) => {
+  const user = req.body;
+  const sessionUser = getAuthenticatedUserFromToken(
+    req.headers.authorization as string
+  );
+  if (sessionUser && (sessionUser as IUser).id !== req.params.id) {
+    return res.status(401).json({ message: "Unauthorized", showError: true });
+  }
+  const updatedUser = await updateUser((sessionUser as IUser).id, user);
+  if (updatedUser instanceof KnownError) {
+    res.status(400).json({ message: updatedUser.message, showError: true });
+  }
+  if (updatedUser instanceof Error) {
+    res.status(500).json({ message: updatedUser.message });
+  }
+  delete (updatedUser as any).password;
+  res.status(200).json(updatedUser);
 };
 
 export const register = async (req: Request, res: Response) => {
