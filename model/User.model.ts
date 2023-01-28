@@ -17,4 +17,5 @@ export interface IUser {
   name: string;
   createdAt: Dayjs;
   expenses: IExpense[];
+  picture?: string;
 }
