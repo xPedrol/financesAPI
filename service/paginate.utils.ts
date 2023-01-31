@@ -16,7 +16,6 @@ export const paginate = (
   }
   limit = limit || 10;
   const offset = (page + 1) * limit - limit;
-  console.log("offset", offset);
   return {
     take: limit,
     skip: offset,

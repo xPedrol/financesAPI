@@ -2,14 +2,15 @@ import { Request, Response } from "express";
 import { getAuthenticatedUserFromToken } from "../service/auth.service";
 import { IUser } from "../model/User.model";
 import {
-  countNotes,
   createNote,
   deleteNote,
   getNote,
+  getNoteCount,
   getNotes,
   updateNote,
   updateNoteFixed,
 } from "../service/note.service";
+import dayjs from "dayjs";
 
 export const controllerCreateNote = async (req: Request, res: Response) => {
   const note = req.body;
@@ -70,11 +71,11 @@ export const controllerDeleteNote = async (req: Request, res: Response) => {
   res.status(200).json(deletedNote);
 };
 
-export const controllerCountNotes = async (req: Request, res: Response) => {
+export const controllerGetNoteCount = async (req: Request, res: Response) => {
   const user = getAuthenticatedUserFromToken(
     req.headers.authorization as string
   );
-  const notes = await countNotes(user as IUser);
+  const notes = await getNoteCount(user as IUser);
   if (notes instanceof Error) {
     res.status(500).json(notes.message);
   }

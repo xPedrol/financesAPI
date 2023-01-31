@@ -4,13 +4,17 @@ import dayjs from "dayjs";
 import { IExpensesByMonth } from "../model/ExpensesByMonth.model";
 import { formatDate } from "../utils/formatDate.utils";
 
-export const getExpenseStatistic = async (user: IUser, date: string) => {
+export const getExpenseStatistic = async (
+  user: IUser,
+  date: string,
+  unit: "year" | "month" = "month"
+) => {
   try {
     const expenseGainSum = await prismaClient.expense.aggregate({
       where: {
         date: {
-          gte: dayjs(date).startOf("month").toDate(),
-          lte: dayjs(date).endOf("month").toDate(),
+          gte: dayjs(date).startOf(unit).toDate(),
+          lte: dayjs(date).endOf(unit).toDate(),
         },
         userId: user.id,
         amount: {
@@ -24,8 +28,8 @@ export const getExpenseStatistic = async (user: IUser, date: string) => {
     const expenseLossSum = await prismaClient.expense.aggregate({
       where: {
         date: {
-          gte: dayjs(date).startOf("month").toDate(),
-          lte: dayjs(date).endOf("month").toDate(),
+          gte: dayjs(date).startOf(unit).toDate(),
+          lte: dayjs(date).endOf(unit).toDate(),
         },
         userId: user.id,
         amount: {
@@ -63,7 +67,6 @@ export const getExpensesByMonth = async (
             formatDate(expenseByMonth.date)
           );
 
-          console.log("gainsAndLosses", gainsAndLosses);
           if (gainsAndLosses instanceof Error || !gainsAndLosses) {
             gainsAndLosses = {
               gains: 0,

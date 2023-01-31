@@ -34,12 +34,10 @@ export const getNote = async (id: string) => {
 };
 
 export const getNotes = async (user?: IUser) => {
-  let where: any = {};
-  if (user) {
-    where = {
-      userId: user.id,
-    };
-  }
+  let where: any = {
+    userId: user?.id,
+  };
+  if (!user) delete where.userId;
   try {
     return await prismaClient.note.findMany({
       where,
@@ -51,6 +49,14 @@ export const getNotes = async (user?: IUser) => {
         color: true,
         fixed: true,
       },
+      orderBy: [
+        {
+          fixed: "desc",
+        },
+        {
+          date: "desc",
+        },
+      ],
     });
   } catch (e: any) {
     return new Error(e.message);
@@ -106,13 +112,15 @@ export const updateNoteFixed = async (id: string) => {
     return new Error(e.message);
   }
 };
-export const countNotes = async (user: IUser) => {
+
+export const getNoteCount = async (user: IUser) => {
+  let where: any = {};
+  where = {
+    userId: user.id,
+  };
   try {
-    return await prismaClient.note.aggregate({
-      where: {
-        userId: user.id,
-      },
-      _count: true,
+    return await prismaClient.note.count({
+      where,
     });
   } catch (e: any) {
     return new Error(e.message);
