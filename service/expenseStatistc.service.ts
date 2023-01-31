@@ -1,6 +1,5 @@
 import prismaClient from "../config/prismaConfig";
 import { IUser } from "../model/User.model";
-import { IGoal } from "../model/Goal.model";
 import dayjs from "dayjs";
 import { IExpensesByMonth } from "../model/ExpensesByMonth.model";
 import { formatDate } from "../utils/formatDate.utils";
@@ -54,7 +53,7 @@ export const getExpensesByMonth = async (
     const expensesByMonth = await prismaClient.$queryRaw<
       IExpensesByMonth[]
     >`SELECT DATE_FORMAT(date,'%m/%Y') as date,SUM(amount) as amount FROM Expense
-       WHERE userId = ${user.id} GROUP BY DATE_FORMAT(date,'%m/%Y')  ORDER BY date DESC`;
+       WHERE userId = ${user.id} GROUP BY DATE_FORMAT(date,'%m/%Y')  ORDER BY date ASC`;
     if (Array.isArray(expensesByMonth)) {
       for (let i = 0; i < expensesByMonth.length; i++) {
         const expenseByMonth = expensesByMonth[i];

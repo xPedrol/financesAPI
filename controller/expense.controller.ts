@@ -5,6 +5,7 @@ import {
   createExpense,
   deleteExpense,
   getExpense,
+  getExpenseCount,
   getExpenses,
   updateExpense,
 } from "../service/expense.service";
@@ -63,4 +64,21 @@ export const controllerDeleteExpense = async (req: Request, res: Response) => {
     res.status(500).json(deletedExpense.message);
   }
   res.status(200).json(deletedExpense);
+};
+
+export const controllerGetExpenseCount = async (
+  req: Request,
+  res: Response
+) => {
+  const user = getAuthenticatedUserFromToken(
+    req.headers.authorization as string
+  );
+  if (req.query.date === undefined) {
+    req.query.date = `${dayjs().month() + 1}-01-${dayjs().year()}`;
+  }
+  const count = await getExpenseCount(user as IUser, req.query.date as string);
+  if (count instanceof Error) {
+    res.status(500).json(count.message);
+  }
+  res.status(200).json(count);
 };

@@ -32,6 +32,23 @@ export const getExpense = async (id: string) => {
   }
 };
 
+export const getExpenseCount = async (user: IUser, date: string) => {
+  let where: any = {};
+  where = {
+    userId: user.id,
+    date: {
+      gte: dayjs(date).startOf("month").toDate(),
+      lte: dayjs(date).endOf("month").toDate(),
+    },
+  };
+  try {
+    return await prismaClient.expense.count({
+      where,
+    });
+  } catch (e: any) {
+    return new Error(e.message);
+  }
+};
 export const getExpenses = async (user: IUser, date: string, page: string) => {
   let where: any = {};
   where = {
