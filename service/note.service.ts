@@ -11,9 +11,9 @@ export const createNote = async (note: INote, user: IUser) => {
         description: note.description,
         createdAt: dayjs(note.createdAt).toDate(),
         date: dayjs(note.date).toDate(),
-        color: note.color,
         userId: user.id,
         fixed: note.fixed,
+        noteGroupId: note.noteGroupId || null,
       },
     });
   } catch (e: any) {
@@ -46,7 +46,6 @@ export const getNotes = async (user?: IUser) => {
         title: true,
         date: true,
         description: true,
-        color: true,
         fixed: true,
       },
       orderBy: [
@@ -73,7 +72,6 @@ export const updateNote = async (id: string, note: INote) => {
         title: note.title,
         description: note.description,
         date: dayjs(note.date).toDate(),
-        color: note.color,
         fixed: note.fixed,
       },
     });
@@ -121,6 +119,21 @@ export const getNoteCount = async (user: IUser) => {
   try {
     return await prismaClient.note.count({
       where,
+    });
+  } catch (e: any) {
+    return new Error(e.message);
+  }
+};
+
+export const removeFromNoteGroup = async (id: string) => {
+  try {
+    return await prismaClient.note.update({
+      where: {
+        id,
+      },
+      data: {
+        noteGroupId: null,
+      },
     });
   } catch (e: any) {
     return new Error(e.message);

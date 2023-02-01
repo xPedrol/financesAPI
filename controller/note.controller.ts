@@ -7,6 +7,7 @@ import {
   getNote,
   getNoteCount,
   getNotes,
+  removeFromNoteGroup,
   updateNote,
   updateNoteFixed,
 } from "../service/note.service";
@@ -80,4 +81,14 @@ export const controllerGetNoteCount = async (req: Request, res: Response) => {
     res.status(500).json(notes.message);
   }
   res.status(200).json(notes);
+};
+export const controllerRemoveFromNoteGroup = async (
+  req: Request,
+  res: Response
+) => {
+  const note = await removeFromNoteGroup(req.params.id);
+  if (note instanceof Error) {
+    res.status(500).json(note.message);
+  }
+  res.status(200).json(note);
 };
