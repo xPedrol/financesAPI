@@ -14,6 +14,7 @@ app.use(express.static("public"));
 app.use("/", require("./routes/auth.route"));
 app.use("/expenses", require("./routes/expense.route"));
 app.use("/notes", require("./routes/note.route"));
+app.use("/noteGroups", require("./routes/noteGroup.route"));
 app.use("/expensesStatistic", require("./routes/expensesStatistic.route"));
 app.use("/tags", require("./routes/tag.route"));
 app.use("/goals", require("./routes/goal.route"));

@@ -27,7 +27,7 @@ model Tag {
   id          String    @id @default(uuid()) @map("_id")
   name        String
   color       String
-  description String    @db.Text
+  description String?   @db.Text
   Expense     Expense[]
   createdAt   DateTime? @default(now())
   user        User      @relation(fields: [userId], references: [id])
@@ -53,7 +53,7 @@ model Expense {
 model Note {
   id          String     @id @default(uuid()) @map("_id")
   title       String
-  description String     @db.Text
+  description String?    @db.Text
   createdAt   DateTime?  @default(now())
   user        User       @relation(fields: [userId], references: [id])
   userId      String
@@ -67,7 +67,7 @@ model Note {
 
 model NoteGroup {
   id        String    @id @default(uuid()) @map("_id")
-  title     String
+  name      String
   createdAt DateTime? @default(now())
   user      User      @relation(fields: [userId], references: [id])
   userId    String
