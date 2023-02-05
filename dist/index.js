@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -11,9 +12,10 @@ app.use(express.static("public"));
 app.use("/", require("./routes/auth.route"));
 app.use("/expenses", require("./routes/expense.route"));
 app.use("/notes", require("./routes/note.route"));
+app.use("/noteGroups", require("./routes/noteGroup.route"));
 app.use("/expensesStatistic", require("./routes/expensesStatistic.route"));
 app.use("/tags", require("./routes/tag.route"));
 app.use("/goals", require("./routes/goal.route"));
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`);
+    console.log(`App listening on port ${port}`);
 });

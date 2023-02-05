@@ -9,6 +9,8 @@ import {
   getNoteGroups,
   updateNoteGroup,
 } from "../service/noteGroup.service";
+import { removeEmptyProperties } from "../utils/cleanObject.utils";
+import { getPaginationParams } from "../utils/handlePagination.utils";
 
 export const controllerCreateNoteGroup = async (
   req: Request,
@@ -37,7 +39,15 @@ export const controllerGetNoteGroups = async (req: Request, res: Response) => {
   const user = getAuthenticatedUserFromToken(
     req.headers.authorization as string
   );
-  const noteGroups = await getNoteGroups(user as IUser);
+  let query = {
+    userId: (user as IUser).id,
+    name: {
+      contains: req.query.name as string,
+    },
+  };
+  query = removeEmptyProperties(query);
+  const paginate = getPaginationParams(req.query);
+  const noteGroups = await getNoteGroups(query, paginate);
   if (noteGroups instanceof Error) {
     res.status(500).json(noteGroups.message);
   }

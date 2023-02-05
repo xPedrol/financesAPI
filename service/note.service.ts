@@ -47,6 +47,13 @@ export const getNotes = async (user?: IUser) => {
         date: true,
         description: true,
         fixed: true,
+        noteGroupId: true,
+        noteGroup: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
       },
       orderBy: [
         {
@@ -125,14 +132,18 @@ export const getNoteCount = async (user: IUser) => {
   }
 };
 
-export const removeFromNoteGroup = async (id: string) => {
+export const switchNoteGroup = async (
+  id: string,
+  noteGroupId: string | null
+) => {
+  if (noteGroupId === "delete") noteGroupId = null;
   try {
     return await prismaClient.note.update({
       where: {
         id,
       },
       data: {
-        noteGroupId: null,
+        noteGroupId,
       },
     });
   } catch (e: any) {

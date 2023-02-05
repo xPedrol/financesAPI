@@ -1,7 +1,7 @@
-export const paginate = (
-  page: string | number | null | undefined,
-  limit?: number
-) => {
+import { IPaginate } from "../model/Paginate.model";
+
+export const handlePaginate = (paginate: IPaginate) => {
+  let { page, perPage: limit } = paginate;
   if (page === null || page === undefined) {
     page = 0;
   }
@@ -14,7 +14,7 @@ export const paginate = (
   if (page < 0) {
     page = 0;
   }
-  limit = limit || 10;
+  limit = limit ? Number(limit) : 10;
   const offset = (page + 1) * limit - limit;
   return {
     take: limit,

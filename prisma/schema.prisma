@@ -59,7 +59,7 @@ model Note {
   userId      String
   date        DateTime?
   fixed       Boolean?
-  NoteGroup   NoteGroup? @relation(fields: [noteGroupId], references: [id])
+  noteGroup   NoteGroup? @relation(fields: [noteGroupId], references: [id])
   noteGroupId String?
 
   @@index([userId])

@@ -7,7 +7,7 @@ import {
   getNote,
   getNoteCount,
   getNotes,
-  removeFromNoteGroup,
+  switchNoteGroup,
   updateNote,
   updateNoteFixed,
 } from "../service/note.service";
@@ -82,11 +82,11 @@ export const controllerGetNoteCount = async (req: Request, res: Response) => {
   }
   res.status(200).json(notes);
 };
-export const controllerRemoveFromNoteGroup = async (
+export const controllerSwitchNoteGroup = async (
   req: Request,
   res: Response
 ) => {
-  const note = await removeFromNoteGroup(req.params.id);
+  const note = await switchNoteGroup(req.params.id, req.params.noteGroupId);
   if (note instanceof Error) {
     res.status(500).json(note.message);
   }

@@ -1,6 +1,8 @@
 import prismaClient from "../config/prismaConfig";
 import { INoteGroup } from "../model/NoteGroup.model";
 import { IUser } from "../model/User.model";
+import { handlePaginate } from "./paginate.utils";
+import { IPaginate } from "../model/Paginate.model";
 
 export const createNoteGroup = async (noteGroup: INoteGroup, user: IUser) => {
   try {
@@ -27,14 +29,12 @@ export const getNoteGroup = async (id: string) => {
   }
 };
 
-export const getNoteGroups = async (user?: IUser) => {
-  let where: any = {
-    userId: user?.id,
-  };
-  if (!user) delete where.userId;
+export const getNoteGroups = async (query: any, paginate: IPaginate) => {
+  let where: any = query;
   try {
     return await prismaClient.noteGroup.findMany({
       where,
+      ...handlePaginate(paginate),
       select: {
         id: true,
         name: true,
