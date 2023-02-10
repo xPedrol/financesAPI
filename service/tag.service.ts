@@ -2,6 +2,9 @@ import { IExpense } from "../model/Expense.model";
 import { IUser } from "../model/User.model";
 import prismaClient from "../config/prismaConfig";
 import { ITag } from "../model/Tag.model";
+import dayjs from "dayjs";
+import { IPaginate } from "../model/Paginate.model";
+import { KnownError } from "../model/KnownError.model";
 
 export const createTag = async (expense: ITag, user: IUser) => {
   try {
@@ -65,10 +68,30 @@ export const updateTag = async (id: string, tag: ITag) => {
 
 export const deleteTag = async (id: string) => {
   try {
+    const expense = await prismaClient.expense.findFirst({
+      where: {
+        tagId: id,
+      },
+    });
+    console.log("expense", expense);
+    if (expense) {
+      return new KnownError("Tag is used in expense");
+    }
     return await prismaClient.tag.delete({
       where: {
         id,
       },
+    });
+  } catch (e: any) {
+    return new Error(e.message);
+  }
+};
+
+export const getTagCount = async (query: any) => {
+  let where: any = query;
+  try {
+    return await prismaClient.tag.count({
+      where,
     });
   } catch (e: any) {
     return new Error(e.message);

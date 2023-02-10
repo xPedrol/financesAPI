@@ -4,60 +4,72 @@ import { IUser } from "../model/User.model";
 import {
   createTag,
   deleteTag,
-  getTags,
   getTag,
+  getTagCount,
+  getTags,
   updateTag,
 } from "../service/tag.service";
+import { removeEmptyProperties } from "../utils/cleanObject.utils";
+import { KnownError } from "../model/KnownError.model";
 
 export const controllerCreateTag = async (req: Request, res: Response) => {
-  try {
-    const tag = req.body;
-    const user = getAuthenticatedUserFromToken(
-      req.headers.authorization as string
-    );
-    const createdExpense = await createTag(tag, user as IUser);
-    res.status(200).json(createdExpense);
-  } catch (e: any) {
-    res.status(500).json(e.message);
-  }
+  const tag = req.body;
+  const user = getAuthenticatedUserFromToken(
+    req.headers.authorization as string
+  );
+  const createdExpense = await createTag(tag, user as IUser);
+  res.status(200).json(createdExpense);
 };
 
 export const controllerGetTag = async (req: Request, res: Response) => {
-  try {
-    const tag = await getTag(req.params.id);
-    res.status(200).json(tag);
-  } catch (e: any) {
-    res.status(500).json(e.message);
+  const tag = await getTag(req.params.id);
+  if (tag instanceof Error) {
+    res.status(500).json(tag.message);
   }
+  res.status(200).json(tag);
 };
 
 export const controllerGetTags = async (req: Request, res: Response) => {
-  try {
-    const user = getAuthenticatedUserFromToken(
-      req.headers.authorization as string
-    );
-    const tags = await getTags(user as IUser);
-    res.status(200).json(tags);
-  } catch (e: any) {
-    res.status(500).json(e.message);
+  const user = getAuthenticatedUserFromToken(
+    req.headers.authorization as string
+  );
+  const tags = await getTags(user as IUser);
+  if (tags instanceof Error) {
+    res.status(500).json(tags.message);
   }
+  res.status(200).json(tags);
 };
 
 export const controllerUpdateTag = async (req: Request, res: Response) => {
-  try {
-    const tag = req.body;
-    const updatedTag = await updateTag(req.params.id, tag);
-    res.status(200).json(updatedTag);
-  } catch (e: any) {
-    res.status(500).json(e.message);
+  const tag = req.body;
+  const updatedTag = await updateTag(req.params.id, tag);
+  if (updatedTag instanceof Error) {
+    res.status(500).json(updatedTag.message);
   }
+  res.status(200).json(updatedTag);
 };
 
 export const controllerDeleteTag = async (req: Request, res: Response) => {
-  try {
-    const deletedTag = await deleteTag(req.params.id);
-    res.status(200).json(deletedTag);
-  } catch (e: any) {
-    res.status(500).json(e.message);
+  const deletedTag = await deleteTag(req.params.id);
+  if (deletedTag instanceof KnownError) {
+    res.status(401).json({ message: deletedTag.message, showError: true });
+  } else if (deletedTag instanceof Error) {
+    res.status(500).json(deletedTag.message);
   }
+  res.status(200).json(deletedTag);
+};
+
+export const controllerGetTagCount = async (req: Request, res: Response) => {
+  const user = getAuthenticatedUserFromToken(
+    req.headers.authorization as string
+  );
+  let query = {
+    userId: (user as IUser).id,
+  };
+  query = removeEmptyProperties(query);
+  const count = await getTagCount(query);
+  if (count instanceof Error) {
+    res.status(500).json(count.message);
+  }
+  res.status(200).json(count);
 };
