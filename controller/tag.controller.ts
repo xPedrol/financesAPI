@@ -11,6 +11,7 @@ import {
 } from "../service/tag.service";
 import { removeEmptyProperties } from "../utils/cleanObject.utils";
 import { KnownError } from "../model/KnownError.model";
+import { getPaginationParams } from "../utils/handlePagination.utils";
 
 export const controllerCreateTag = async (req: Request, res: Response) => {
   const tag = req.body;
@@ -33,7 +34,17 @@ export const controllerGetTags = async (req: Request, res: Response) => {
   const user = getAuthenticatedUserFromToken(
     req.headers.authorization as string
   );
-  const tags = await getTags(user as IUser);
+  let query = {
+    where: {
+      userId: (user as IUser).id,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  };
+  query = removeEmptyProperties(query);
+  const paginate = getPaginationParams(req.query);
+  const tags = await getTags(query, paginate);
   if (tags instanceof Error) {
     res.status(500).json(tags.message);
   }

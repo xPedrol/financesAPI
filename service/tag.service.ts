@@ -5,6 +5,7 @@ import { ITag } from "../model/Tag.model";
 import dayjs from "dayjs";
 import { IPaginate } from "../model/Paginate.model";
 import { KnownError } from "../model/KnownError.model";
+import { handlePaginate } from "./paginate.utils";
 
 export const createTag = async (expense: ITag, user: IUser) => {
   try {
@@ -33,16 +34,11 @@ export const getTag = async (id: string) => {
   }
 };
 
-export const getTags = async (user?: IUser) => {
-  let where: any = {};
-  if (user) {
-    where = {
-      userId: user.id,
-    };
-  }
+export const getTags = async (query: any, paginate: IPaginate) => {
   try {
     return await prismaClient.tag.findMany({
-      where,
+      ...query,
+      ...handlePaginate(paginate),
     });
   } catch (e: any) {
     return new Error(e.message);
