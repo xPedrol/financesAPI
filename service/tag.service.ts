@@ -69,7 +69,6 @@ export const deleteTag = async (id: string) => {
         tagId: id,
       },
     });
-    console.log("expense", expense);
     if (expense) {
       return new KnownError("Tag is used in expense");
     }

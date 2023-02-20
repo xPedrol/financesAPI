@@ -75,6 +75,9 @@ export const getExpenses = async (user: IUser, date: string, page: string) => {
           },
         },
       },
+      orderBy: {
+        date: "desc",
+      },
     });
   } catch (e: any) {
     return new Error(e.message);
