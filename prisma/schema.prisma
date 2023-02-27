@@ -39,7 +39,7 @@ model Tag {
 model Expense {
   id          String    @id @default(uuid()) @map("_id")
   amount      Float
-  date        DateTime?
+  date        DateTime? @db.Date
   tag         Tag       @relation(fields: [tagId], references: [id])
   tagId       String
   createdAt   DateTime  @default(now())
