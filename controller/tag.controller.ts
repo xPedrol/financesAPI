@@ -42,13 +42,23 @@ export const controllerGetTags = async (req: Request, res: Response) => {
       createdAt: "desc",
     },
   };
+  if (req.query.name) {
+    query.where = {
+      ...query.where,
+      // @ts-ignore
+      name: {
+        contains: req.query.name,
+      },
+    };
+  }
   query = removeEmptyProperties(query);
   const paginate = getPaginationParams(req.query);
   const tags = await getTags(query, paginate);
   if (tags instanceof Error) {
     res.status(500).json(tags.message);
+  } else {
+    res.status(200).json(tags);
   }
-  res.status(200).json(tags);
 };
 
 export const controllerUpdateTag = async (req: Request, res: Response) => {
