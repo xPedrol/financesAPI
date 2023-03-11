@@ -101,6 +101,13 @@ export const updateExpense = async (id: string, expense: IExpense) => {
         description: expense?.description ?? undefined,
         date: dayjs(expense.date).toDate(),
       },
+      include: {
+        tag: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
   } catch (e: any) {
     return new Error(e.message);
