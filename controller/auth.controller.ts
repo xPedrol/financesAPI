@@ -14,9 +14,7 @@ export const login = async (req: Request, res: Response) => {
   const user = req.body;
   const loggedUser = await loginUser(user);
   if (loggedUser instanceof KnownError) {
-    return res
-      .status(401)
-      .json({ message: loggedUser.message, showError: true });
+    res.status(401).json({ message: loggedUser.message, showError: true });
   } else if (loggedUser instanceof Error) {
     res.status(400).json({ message: loggedUser.message });
   } else {

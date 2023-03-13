@@ -18,8 +18,16 @@ export const controllerCreateTag = async (req: Request, res: Response) => {
   const user = getAuthenticatedUserFromToken(
     req.headers.authorization as string
   );
-  const createdExpense = await createTag(tag, user as IUser);
-  res.status(200).json(createdExpense);
+  const createdTag = await createTag(tag, user as IUser);
+  if (createdTag instanceof KnownError) {
+    res.status(401).json({ message: createdTag.message, showError: true });
+    return;
+  }
+  if (createdTag instanceof Error) {
+    res.status(500).json(createdTag.message);
+    return;
+  }
+  res.status(200).json(createdTag);
 };
 
 export const controllerGetTag = async (req: Request, res: Response) => {

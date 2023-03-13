@@ -1,19 +1,26 @@
-import { IExpense } from "../model/Expense.model";
 import { IUser } from "../model/User.model";
 import prismaClient from "../config/prismaConfig";
 import { ITag } from "../model/Tag.model";
-import dayjs from "dayjs";
 import { IPaginate } from "../model/Paginate.model";
 import { KnownError } from "../model/KnownError.model";
 import { handlePaginate } from "./paginate.utils";
 
-export const createTag = async (expense: ITag, user: IUser) => {
+export const createTag = async (tag: ITag, user: IUser) => {
   try {
+    const findTag = await prismaClient.tag.findFirst({
+      where: {
+        name: tag.name,
+        userId: user.id,
+      },
+    });
+    if (findTag) {
+      return new KnownError("Tag already exists");
+    }
     return await prismaClient.tag.create({
       data: {
-        color: expense.color,
-        description: expense.description,
-        name: expense.name,
+        color: tag.color,
+        description: tag.description,
+        name: tag.name,
         userId: user.id,
       },
     });
