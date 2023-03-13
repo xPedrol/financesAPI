@@ -23,6 +23,7 @@ export const controllerCreateNoteGroup = async (
   const createdNoteGroup = await createNoteGroup(noteGroup, user as IUser);
   if (createdNoteGroup instanceof Error) {
     res.status(400).json({ message: createdNoteGroup.message });
+    return;
   }
   res.status(200).json(createdNoteGroup);
 };
@@ -31,6 +32,7 @@ export const controllerGetNoteGroup = async (req: Request, res: Response) => {
   const noteGroup = await getNoteGroup(req.params.id);
   if (noteGroup instanceof Error) {
     res.status(500).json(noteGroup.message);
+    return;
   }
   res.status(200).json(noteGroup);
 };
@@ -50,6 +52,7 @@ export const controllerGetNoteGroups = async (req: Request, res: Response) => {
   const noteGroups = await getNoteGroups(query, paginate);
   if (noteGroups instanceof Error) {
     res.status(500).json(noteGroups.message);
+    return;
   }
   res.status(200).json(noteGroups);
 };
@@ -62,6 +65,7 @@ export const controllerUpdateNoteGroup = async (
   const updatedNoteGroup = await updateNoteGroup(req.params.id, noteGroup);
   if (updatedNoteGroup instanceof Error) {
     res.status(500).json(updatedNoteGroup.message);
+    return;
   }
   res.status(200).json(updatedNoteGroup);
 };
@@ -73,6 +77,7 @@ export const controllerDeleteNoteGroup = async (
   const deletedNoteGroup = await deleteNoteGroup(req.params.id);
   if (deletedNoteGroup instanceof Error) {
     res.status(500).json(deletedNoteGroup.message);
+    return;
   }
   res.status(200).json(deletedNoteGroup);
 };
@@ -87,6 +92,7 @@ export const controllerGetNoteGroupCount = async (
   const noteGroups = await getNoteGroupCount(user as IUser);
   if (noteGroups instanceof Error) {
     res.status(500).json(noteGroups.message);
+    return;
   }
   res.status(200).json(noteGroups);
 };

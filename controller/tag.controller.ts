@@ -26,8 +26,9 @@ export const controllerGetTag = async (req: Request, res: Response) => {
   const tag = await getTag(req.params.id);
   if (tag instanceof Error) {
     res.status(500).json(tag.message);
+  } else {
+    res.status(200).json(tag);
   }
-  res.status(200).json(tag);
 };
 
 export const controllerGetTags = async (req: Request, res: Response) => {
@@ -66,8 +67,9 @@ export const controllerUpdateTag = async (req: Request, res: Response) => {
   const updatedTag = await updateTag(req.params.id, tag);
   if (updatedTag instanceof Error) {
     res.status(500).json(updatedTag.message);
+  } else {
+    res.status(200).json(updatedTag);
   }
-  res.status(200).json(updatedTag);
 };
 
 export const controllerDeleteTag = async (req: Request, res: Response) => {
@@ -76,8 +78,9 @@ export const controllerDeleteTag = async (req: Request, res: Response) => {
     res.status(401).json({ message: deletedTag.message, showError: true });
   } else if (deletedTag instanceof Error) {
     res.status(500).json(deletedTag.message);
+  } else {
+    res.status(200).json(deletedTag);
   }
-  res.status(200).json(deletedTag);
 };
 
 export const controllerGetTagCount = async (req: Request, res: Response) => {

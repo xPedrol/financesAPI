@@ -30,6 +30,7 @@ export const controllerGetExpenseStatistic = async (
   );
   if (createdExpense instanceof Error) {
     res.status(400).json({ message: createdExpense.message });
+    return;
   }
   res.status(200).json(createdExpense);
 };
@@ -44,6 +45,7 @@ export const controllerGetExpensesByMonth = async (
   const monthsBalance = await getExpensesByMonth(user);
   if (monthsBalance instanceof Error) {
     res.status(500).json(monthsBalance.message);
+    return;
   }
   res.status(200).json(monthsBalance);
 };
